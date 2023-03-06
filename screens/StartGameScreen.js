@@ -1,14 +1,48 @@
-import { TextInput, View, StyleSheet  } from "react-native";
+import { useState } from "react";
+import { TextInput, View, StyleSheet, Alert } from "react-native";
 
 import PrimaryButton from "../components/PrimaryButton.js";
 
 function StartGameScreen() {
+    const [enteredNumber, setEnteredNumber] = useState('');
+
+    function numberInputHandler(enteredText){
+         setEnteredNumber(enteredText);
+    }
+
+    function resetInputHandler(){
+        setEnteredNumber('');
+    }
+
+    function confirmInputHandler(){
+        const choseNumber = parseInt(enteredNumber);
+
+        if(isNaN(choseNumber) || choseNumber <= 0 || choseNumber > 99){
+            //show alert
+            Alert.alert('Invalid Number!', 'Number has to be a number between 1 and 99.',
+            [{ text: 'Okay', style: 'destructive', onPress: resetInputHandler }]
+            );
+            return;
+        }
+
+        console.log('valid');
+    }
+
     return (
         <View style={styles.inputContainer}>
-            <TextInput style={styles.numberInput} maxLength={2} keyboardType="number-pad" autoFocus={true} autoCapitalize="none" autoCorrect={false} />
+            <TextInput 
+                style={styles.numberInput} 
+                maxLength={2} 
+                keyboardType="number-pad" 
+                autoFocus={true} 
+                autoCapitalize="none" 
+                autoCorrect={false} 
+                onChangeText={numberInputHandler}
+                value={enteredNumber}
+            />
             <View style={styles.buttonsContainer}>
-                <View style={styles.buttonContainer}><PrimaryButton>Reset</PrimaryButton></View>
-                <View style={styles.buttonContainer}><PrimaryButton>Confirm</PrimaryButton></View>
+                <View style={styles.buttonContainer}><PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton></View>
+                <View style={styles.buttonContainer}><PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton></View>
             </View>
         </View>
     );
